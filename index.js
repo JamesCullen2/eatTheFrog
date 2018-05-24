@@ -1,4 +1,7 @@
 const express = require('express')
+
+const { body } = require('express-validator/check')
+
 const app = express()
 
 const MongoClient = require('mongodb').MongoClient
@@ -10,19 +13,6 @@ app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded())
 
-
-// MongoDB connection
-// MongoClient.connect(url, function(err, client){
-//     console.log('Connected to mongoDb, lol')
-//     let db = client.db('eatTheFrog')
-    // addData(db)
-    // insertIntoDB(db)
-    // getDataFromDB(db)
-    // updateDataFromDB(db)
-    // removeDataFromDB(db)
-    // db.close()
-// })
-
 // MongoDB get route
 app.get('/tasks', function(req, res) {
 
@@ -32,7 +22,7 @@ app.get('/tasks', function(req, res) {
         getDataFromDB(db)
     })
 
-    var getDataFromDB = function (db) {
+     function getDataFromDB (db) {
         var collection = db.collection('eatTheFrog')
         collection.find({}).toArray(function (err, docs) {
             res.json(docs)
@@ -41,7 +31,7 @@ app.get('/tasks', function(req, res) {
 })
 
 // MongoDB insert into query
-app.post('/task', function (req, res){
+app.post('/task', body().isString(), function (req, res){
 
     MongoClient.connect(url, function (err, client) {
         console.log('Connected to mongoDb, lol')
@@ -106,31 +96,5 @@ app.delete('/task', function (req, res){
             })
     }
 })
-
-
-// app.get('/', function(req, res){
-//     res.render('home', {title: true, body: 'hello'})
-// })
-//
-// app.get('/', function (req, res){
-//     res.send('hello')
-//     res.json({})
-// })
-//
-// app.put('/task/:id', function (req, res){
-//     res.send("Completed a new task!")
-// })
-//
-// app.post('/task', function (req, res){
-//     res.send(req.params)
-// })
-//
-// app.delete('/task', function (req, res){
-//     res.send("You've deleted a task!")
-// })
-//
-// app.delete('/task/:id', function (req, res){
-//     res.send(req.params)
-// })
 
 app.listen(3000)
